@@ -11,37 +11,37 @@ const defaultNodeVersion = "16"
 // The container image containing our production app, with built assets served by nginx.
 func (m *Example) AppContainer(nodeVersion Optional[string]) *Container {
 	return dag.Container().From("cgr.dev/chainguard/nginx:latest").
-		WithDirectory("/usr/share/nginx/html", m.Build(srcDir, nodeVersion)).
+		WithDirectory("/usr/share/nginx/html", m.Build(nodeVersion)).
 		WithExposedPort(8080)
 }
 
 // The app-container as a service for local testing
 func (m *Example) Service(nodeVersion Optional[string]) *Service {
-	return m.AppContainer(srcDir, nodeVersion).AsService()
+	return m.AppContainer(nodeVersion).AsService()
 }
 
 // A container w/ the built app and node toolchain for debugging
 func (m *Example) Debug(nodeVersion Optional[string]) *Container {
-	return m.buildBase(srcDir, nodeVersion).Container().
+	return m.buildBase(nodeVersion).Container().
 		WithEntrypoint([]string{"sh"}).
 		WithDefaultArgs()
 }
 
 // The directory containing the built app
 func (m *Example) Build(nodeVersion Optional[string]) *Directory {
-	return m.buildBase(srcDir, nodeVersion).Build().Container().Directory("./build")
+	return m.buildBase(nodeVersion).Build().Container().Directory("./build")
 }
 
 // Run the app's tests
 func (m *Example) Test(ctx context.Context, nodeVersion Optional[string]) (string, error) {
-	return m.buildBase(srcDir, nodeVersion).
+	return m.buildBase(nodeVersion).
 		Run([]string{"test", "--", "--watchAll=false"}).
 		Stderr(ctx)
 }
 
 // Publish the app-container (to ttl.sh)
 func (m *Example) PublishContainer(ctx context.Context, nodeVersion Optional[string]) (string, error) {
-	return dag.Ttlsh().Publish(ctx, m.AppContainer(srcDir, nodeVersion))
+	return dag.Ttlsh().Publish(ctx, m.AppContainer(nodeVersion))
 }
 
 func (m *Example) buildBase(nodeVersion Optional[string]) *Node {
