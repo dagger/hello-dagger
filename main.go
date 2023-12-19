@@ -23,8 +23,7 @@ func (m *Example) Service(nodeVersion Optional[string]) *Service {
 // A container w/ the built app and node toolchain for debugging
 func (m *Example) Debug(nodeVersion Optional[string]) *Container {
 	return m.buildBase(nodeVersion).Container().
-		WithEntrypoint([]string{"sh"}).
-		WithDefaultArgs()
+		WithEntrypoint([]string{"sh"})
 }
 
 // The directory containing the built app
