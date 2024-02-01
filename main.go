@@ -47,8 +47,6 @@ func (m *Example) buildBase(nodeVersion Optional[string]) *Node {
 	return dag.Node().
 		WithVersion(nodeVersion.GetOr(defaultNodeVersion)).
 		WithNpm().
-		WithSource(dag.Host().Directory(".", HostDirectoryOpts{
-			Exclude: []string{".git", "**/node_modules"},
-		})).
+		WithSource(dag.CurrentModule().Source()).
 		Install(nil)
 }
