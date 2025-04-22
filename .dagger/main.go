@@ -62,35 +62,3 @@ func (m *HelloDagger) BuildEnv(
 		WithWorkdir("/src").
 		WithExec([]string{"npm", "install"})
 }
-
-// A coding agent for developing new features
-func (m *HelloDagger) Develop(
-	// Assignment to complete
-	assignment string,
-	// +defaultPath="/"
-	source *dagger.Directory,
-) *dagger.Directory {
-	environment := dag.Env(dagger.EnvOpts{Privileged: true}).
-		WithWorkspaceInput(
-			"workspace",
-			dag.Workspace(source),
-			"the workspace with tools to edit and test code").
-		WithWorkspaceOutput(
-			"completed",
-			"the workspace with the completed assignment")
-
-	work := dag.LLM().
-		WithEnv(environment).
-		WithPrompt(`
-			You are a develop on a Vue.js project.
-			You will be given an assignment and the tools to complete the assignment.
-			Do not stop until you have completed the assignment and the tests pass.
-			Your assignment is:` + assignment)
-
-	completed := work.
-		Env().
-		Output("completed").
-		AsWorkspace()
-
-	return completed.Source().WithoutDirectory("node_modules")
-}
