@@ -1,0 +1,15 @@
+openapi: 3.1.0
+info:
+  title: Demo Monorepo API
+  version: 0.1.0
+paths:
+  /healthz:
+    get:
+      responses:
+        "200":
+          description: Service health
+  /api/products:
+    get:
+      responses:
+        "200":
+          description: Featured products

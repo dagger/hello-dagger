@@ -8,14 +8,17 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
+apps/web/node_modules
 .DS_Store
 dist
+apps/web/dist
 dist-ssr
 coverage
 *.local
 
-/cypress/videos/
-/cypress/screenshots/
+apps/web/cypress/videos/
+apps/web/cypress/screenshots/
+/bin/
 
 # Editor directories and files
 .vscode/*

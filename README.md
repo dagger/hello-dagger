@@ -1,49 +1,46 @@
-# hello-dagger
+# Dagger Demo Monorepo
 
-This is an example application for use with the Dagger Quickstart. It uses the Vue 3 + Vite template, with minor modifications.
+This repo starts from `dagger/hello-dagger` and turns it into a small monorepo
+that is useful for showing Dagger as native CI:
 
-## Project Setup
+- `apps/web`: Vue + Vite frontend from the original starter
+- `services/api`: Go HTTP API with unit tests and a runnable image
+- `packages/contracts`: shared API contract placeholder
+- `.dagger`: Go Dagger module with CI functions
 
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Type-Check, Compile and Minify for Production
+## Demo Commands
 
 ```sh
-npm run build
+# install Dagger if needed
+curl -fsSL https://dl.dagger.io/dagger/install.sh | sh
+
+# list the native CI surface
+./bin/dagger functions
+
+# run the whole graph locally
+./bin/dagger call ci
+
+# run it in Dagger Cloud and show the trace
+./bin/dagger call ci --cloud
+
+# scale independent work when demoing larger runs
+./bin/dagger call ci --cloud --scale-out
 ```
 
-### Run Unit Tests with [Vitest](https://vitest.dev/)
+Individual functions are also useful for tracing:
 
 ```sh
-npm run test:unit
+./bin/dagger call web-build export --path=./apps/web/dist
+./bin/dagger call api-test
+./bin/dagger call api-image export --path=./api.tar
 ```
 
-### Run End-to-End Tests with [Cypress](https://www.cypress.io/)
+## Local Backend
 
 ```sh
-npm run test:e2e:dev
+cd services/api
+go test ./...
+go run ./cmd/server
 ```
 
-This runs the end-to-end tests against the Vite development server.
-It is much faster than the production build.
-
-But it's still recommended to test the production build with `test:e2e` before deploying (e.g. in CI environments):
-
-```sh
-npm run build
-npm run test:e2e
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+The API exposes `GET /healthz` and `GET /api/products`.
