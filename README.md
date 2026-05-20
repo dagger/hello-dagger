@@ -47,3 +47,17 @@ npm run test:e2e
 ```sh
 npm run lint
 ```
+
+## Go Demo Service
+
+This branch also includes a small Go HTTP service that can be used as a backend
+or second workspace target in demos.
+
+```sh
+cd services/web
+go test ./...
+go run .
+```
+
+The service listens on `:8080` by default and exposes `GET /` and
+`GET /healthz`.
