@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"os"
 	"time"
+
+	"github.com/dagger/hello-dagger/internal/catalog"
 )
 
 type response struct {
@@ -13,10 +15,16 @@ type response struct {
 	Time    string `json:"time"`
 }
 
+type productsResponse struct {
+	Products []catalog.Product `json:"products"`
+	Version  string            `json:"version"`
+}
+
 func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /", handleIndex)
 	mux.HandleFunc("GET /healthz", handleHealth)
+	mux.HandleFunc("GET /products", handleProducts)
 
 	addr := ":" + env("PORT", "8080")
 	server := &http.Server{
@@ -45,7 +53,14 @@ func handleHealth(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func writeJSON(w http.ResponseWriter, value response) {
+func handleProducts(w http.ResponseWriter, r *http.Request) {
+	writeJSON(w, productsResponse{
+		Products: catalog.FeaturedProducts(),
+		Version:  catalog.CatalogVersion,
+	})
+}
+
+func writeJSON(w http.ResponseWriter, value any) {
 	w.Header().Set("content-type", "application/json")
 	if err := json.NewEncoder(w).Encode(value); err != nil {
 		log.Printf("write response: %v", err)
