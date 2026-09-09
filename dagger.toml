@@ -1,0 +1,16 @@
+# Dagger workspace configuration
+# Install modules with: dagger install <module>
+# Example:
+#   dagger install github.com/dagger/dagger/modules/wolfi
+
+[modules.eslint]
+source = "github.com/dagger/eslint"
+
+[modules.prettier]
+source = "github.com/dagger/prettier"
+
+[modules.vitest]
+source = "github.com/dagger/vitest"
+
+[modules.go]
+source = "github.com/dagger/go"
