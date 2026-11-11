@@ -1,4 +1,4 @@
-# Dagger workspace
+# Dagger workspace.
 
 [modules.go]
 source = "dagger.io/go"
