@@ -1,0 +1,12 @@
+name: Merge Queue
+
+on:
+  merge_group:
+    types: [checks_requested]
+
+jobs:
+  wait:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait 3 minutes
+        run: sleep 180
